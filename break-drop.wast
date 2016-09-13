@@ -1,12 +1,7 @@
 (module
-  (func $br (block (br 0)))
-  (export "br" $br)
-
-  (func $br_if (block (br_if 0 (i32.const 1))))
-  (export "br_if" $br_if)
-
-  (func $br_table (block (br_table 0 (i32.const 0))))
-  (export "br_table" $br_table)
+  (func (export "br") (block (br 0)))
+  (func (export "br_if") (block (br_if 0 (i32.const 1))))
+  (func (export "br_table") (block (br_table 0 (i32.const 0))))
 )
 
 (assert_return (invoke "br"))
@@ -15,16 +10,16 @@
 
 (assert_invalid
   (module (func (block (br 0 (nop)))))
-  "arity mismatch"
+  "type mismatch"
 )
 
 (assert_invalid
   (module (func (block (br_if 0 (nop) (i32.const 0)))))
-  "arity mismatch"
+  "type mismatch"
 )
 
 (assert_invalid
   (module (func (block (br_table 0 (nop) (i32.const 0)))))
-  "arity mismatch"
+  "type mismatch"
 )
 

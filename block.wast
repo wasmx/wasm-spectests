@@ -4,29 +4,29 @@
   ;; Auxiliary definition
   (func $dummy)
 
-  (func "empty"
+  (func (export "empty")
     (block)
     (block $l)
   )
 
-  (func "singular" (result i32)
+  (func (export "singular") (result i32)
     (block (nop))
     (block (i32.const 7))
   )
 
-  (func "multi" (result i32)
+  (func (export "multi") (result i32)
     (block (call $dummy) (call $dummy) (call $dummy) (call $dummy))
     (block (call $dummy) (call $dummy) (call $dummy) (i32.const 8))
   )
 
-  (func "nested" (result i32)
+  (func (export "nested") (result i32)
     (block
       (block (call $dummy) (block) (nop))
       (block (call $dummy) (i32.const 9))
     )
   )
 
-  (func "deep" (result i32)
+  (func (export "deep") (result i32)
     (block (block (block (block (block (block (block (block (block (block
       (block (block (block (block (block (block (block (block (block (block
         (block (block (block (block (block (block (block (block (block (block
@@ -38,36 +38,36 @@
     ))))))))))
   )
 
-  (func "as-unary-operand" (result i32)
+  (func (export "as-unary-operand") (result i32)
     (i32.ctz (block (call $dummy) (i32.const 13)))
   )
-  (func "as-binary-operand" (result i32)
+  (func (export "as-binary-operand") (result i32)
     (i32.mul
       (block (call $dummy) (i32.const 3))
       (block (call $dummy) (i32.const 4))
     )
   )
-  (func "as-test-operand" (result i32)
+  (func (export "as-test-operand") (result i32)
     (i32.eqz (block (call $dummy) (i32.const 13)))
   )
-  (func "as-compare-operand" (result i32)
+  (func (export "as-compare-operand") (result i32)
     (f32.gt
       (block (call $dummy) (f32.const 3))
       (block (call $dummy) (f32.const 3))
     )
   )
 
-  (func "break-bare" (result i32)
+  (func (export "break-bare") (result i32)
     (block (br 0) (unreachable))
     (block (br_if 0 (i32.const 1)) (unreachable))
     (block (br_table 0 (i32.const 0)) (unreachable))
     (block (br_table 0 0 0 (i32.const 1)) (unreachable))
     (i32.const 19)
   )
-  (func "break-value" (result i32)
+  (func (export "break-value") (result i32)
     (block (br 0 (i32.const 18)) (i32.const 19))
   )
-  (func "break-repeated" (result i32)
+  (func (export "break-repeated") (result i32)
     (block
       (br 0 (i32.const 18))
       (br 0 (i32.const 19))
@@ -79,7 +79,7 @@
       (i32.const 21)
     )
   )
-  (func "break-inner" (result i32)
+  (func (export "break-inner") (result i32)
     (local i32)
     (set_local 0 (i32.const 0))
     (set_local 0 (i32.add (get_local 0) (block (block (br 1 (i32.const 0x1))))))
@@ -93,7 +93,7 @@
     (get_local 0)
   )
 
-  (func "effects" $fx (result i32)
+  (func (export "effects") (result i32)
     (local i32)
     (block
       (set_local 0 (i32.const 1))
@@ -143,16 +143,16 @@
 )
 
 (assert_invalid
-  (module (func $type-first-num-vs-void (result i32)
-    (block (i32.const 7) (nop) (i32.const 8))
+  (module (func $type-binary (result i64)
+    (block (i64.const 1) (i64.const 2)) i64.add
   ))
-  "type mismatch"
+  "invalid result arity"
 )
 (assert_invalid
-  (module (func $type-mid-num-vs-void (result i32)
-    (block (nop) (i32.const 7) (nop) (i32.const 8))
+  (module (func $type-binary-with-nop (result i32)
+    (block (nop) (i32.const 7) (nop) (i32.const 8)) i32.add
   ))
-  "type mismatch"
+  "invalid result arity"
 )
 
 (assert_invalid
@@ -173,6 +173,7 @@
   ))
   "type mismatch"
 )
+(; TODO(stack): Should these become legal?
 (assert_invalid
   (module (func $type-value-num-vs-void-after-break
     (block (br 0) (i32.const 1))
@@ -191,43 +192,44 @@
   ))
   "type mismatch"
 )
+;)
 
 (assert_invalid
   (module (func $type-break-last-void-vs-empty
     (block (br 0 (nop)))
   ))
-  "arity mismatch"
+  "type mismatch"
 )
 (assert_invalid
   (module (func $type-break-last-num-vs-empty
     (block (br 0 (i32.const 66)))
   ))
-  "arity mismatch"
+  "type mismatch"
 )
 (assert_invalid
   (module (func $type-break-last-empty-vs-num (result i32)
     (block (br 0))
   ))
-  "arity mismatch"
+  "type mismatch"
 )
 
 (assert_invalid
   (module (func $type-break-void-vs-empty
     (block (br 0 (nop)))
   ))
-  "arity mismatch"
+  "type mismatch"
 )
 (assert_invalid
   (module (func $type-break-num-vs-empty
     (block (br 0 (i32.const 1)))
   ))
-  "arity mismatch"
+  "type mismatch"
 )
 (assert_invalid
   (module (func $type-break-empty-vs-num (result i32)
     (block (br 0) (i32.const 1))
   ))
-  "arity mismatch"
+  "type mismatch"
 )
 
 (assert_invalid
@@ -254,6 +256,7 @@
   ))
   "type mismatch"
 )
+(; TODO(stack): Should these become legal?
 (assert_invalid
   (module (func $type-break-second-void-vs-num (result i32)
     (block (br 0 (i32.const 1)) (br 0 (nop)))
@@ -266,24 +269,25 @@
   ))
   "type mismatch"
 )
+;)
 
 (assert_invalid
   (module (func $type-break-nested-void-vs-empty
     (block (block (br 1 (nop))) (br 0))
   ))
-  "arity mismatch"
+  "type mismatch"
 )
 (assert_invalid
   (module (func $type-break-nested-num-vs-empty
     (block (block (br 1 (i32.const 1))) (br 0))
   ))
-  "arity mismatch"
+  "type mismatch"
 )
 (assert_invalid
   (module (func $type-break-nested-empty-vs-num (result i32)
     (block (block (br 1)) (br 0 (i32.const 1)))
   ))
-  "arity mismatch"
+  "type mismatch"
 )
 
 (assert_invalid
@@ -303,7 +307,7 @@
   (module (func $type-break-operand-empty-vs-num (result i32)
     (i32.ctz (block (br 0)))
   ))
-  "arity mismatch"
+  "type mismatch"
 )
 
 (assert_invalid
@@ -318,3 +322,4 @@
   ))
   "type mismatch"
 )
+
