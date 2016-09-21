@@ -102,7 +102,7 @@
   ;; Recursion
 
   (func $fac (export "fac") (type $over-i64)
-    (if (i64.eqz (get_local 0))
+    (if i64 (i64.eqz (get_local 0))
       (i64.const 1)
       (i64.mul
         (get_local 0)
@@ -115,7 +115,7 @@
   )
 
   (func $fib (export "fib") (type $over-i64)
-    (if (i64.le_u (get_local 0) (i64.const 1))
+    (if i64 (i64.le_u (get_local 0) (i64.const 1))
       (i64.const 1)
       (i64.add
         (call_indirect $over-i64
@@ -131,7 +131,7 @@
   )
 
   (func $even (export "even") (param i32) (result i32)
-    (if (i32.eqz (get_local 0))
+    (if i32 (i32.eqz (get_local 0))
       (i32.const 44)
       (call_indirect $over-i32
         (i32.sub (get_local 0) (i32.const 1))
@@ -140,7 +140,7 @@
     )
   )
   (func $odd (export "odd") (param i32) (result i32)
-    (if (i32.eqz (get_local 0))
+    (if i32 (i32.eqz (get_local 0))
       (i32.const 99)
       (call_indirect $over-i32
         (i32.sub (get_local 0) (i32.const 1))
@@ -283,21 +283,6 @@
     )
   )
   "type mismatch"
-)
-
-;; TODO(stack): move these elsewhere
-(module
-  (type (func (param i32 i32)))
-  (table 0 anyfunc)
-  (func $arity-nop-first
-    (call_indirect 0 (nop) (i32.const 1) (i32.const 2) (i32.const 0))
-  )
-  (func $arity-nop-mid
-    (call_indirect 0 (i32.const 1) (nop) (i32.const 2) (i32.const 0))
-  )
-  (func $arity-nop-last
-    (call_indirect 0 (i32.const 1) (i32.const 2) (nop) (i32.const 0))
-  )
 )
 
 (assert_invalid
