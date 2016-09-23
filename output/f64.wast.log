@@ -1,2 +1,3 @@
 Result: 1.34078079299e+154 : f64
 Expect: 1.34078079299e+154 : f64
+test/f64.wast:2302.1-2302.103: assertion failure: wrong return values
