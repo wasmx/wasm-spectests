@@ -419,10 +419,6 @@
 )
 ;)
 
-;; TODO(stack): move these somewhere else
-(module (func $type-return-void-vs-enpty (return (nop))))
-(module (func $type-return-num-vs-enpty (return (i32.const 0))))
-
 (assert_invalid
   (module (func $type-return-last-empty-vs-num (result i32)
     (return)
