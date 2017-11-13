@@ -59,11 +59,11 @@
   (func $u2 (type $U) (i32.const 5))
 
   (func (export "callt") (param $i i32) (result i32)
-    (call_indirect $T (get_local $i))
+    (call_indirect (type $T) (get_local $i))
   )
 
   (func (export "callu") (param $i i32) (result i32)
-    (call_indirect $U (get_local $i))
+    (call_indirect (type $U) (get_local $i))
   )
 )
 
@@ -97,7 +97,7 @@
   (func $t2 (type $T) (i32.const 2))
 
   (func (export "callt") (param $i i32) (result i32)
-    (call_indirect $T (get_local $i))
+    (call_indirect (type $T) (get_local $i))
   )
 )
 

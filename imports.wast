@@ -98,7 +98,7 @@
   (import "spectest" "table" (table 10 20 anyfunc))
   (elem 0 (i32.const 1) $f $g)
 
-  (func (export "call") (param i32) (result i32) (call_indirect 0 (get_local 0)))
+  (func (export "call") (param i32) (result i32) (call_indirect (type 0) (get_local 0)))
   (func $f (result i32) (i32.const 11))
   (func $g (result i32) (i32.const 22))
 )
@@ -115,7 +115,7 @@
   (table (import "spectest" "table") 10 20 anyfunc)
   (elem 0 (i32.const 1) $f $g)
 
-  (func (export "call") (param i32) (result i32) (call_indirect 0 (get_local 0)))
+  (func (export "call") (param i32) (result i32) (call_indirect (type 0) (get_local 0)))
   (func $f (result i32) (i32.const 11))
   (func $g (result i32) (i32.const 22))
 )

@@ -165,24 +165,24 @@
   )
 
   (func (export "signature-explicit-reused")
-    (call_indirect $sig (i32.const 1))
-    (call_indirect $sig (i32.const 4))
+    (call_indirect (type $sig) (i32.const 1))
+    (call_indirect (type $sig) (i32.const 4))
   )
 
   (func (export "signature-implicit-reused")
     ;; The implicit index 16 in this test depends on the function and
     ;; type definitions, and may need adapting if they change.
-    (call_indirect 16
+    (call_indirect (type 16)
       (f64.const 0) (i64.const 0) (f64.const 0) (i64.const 0)
       (f64.const 0) (i64.const 0) (f32.const 0) (i32.const 0)
       (i32.const 0)
     )
-    (call_indirect 16
+    (call_indirect (type 16)
       (f64.const 0) (i64.const 0) (f64.const 0) (i64.const 0)
       (f64.const 0) (i64.const 0) (f32.const 0) (i32.const 0)
       (i32.const 2)
     )
-    (call_indirect 16
+    (call_indirect (type 16)
       (f64.const 0) (i64.const 0) (f64.const 0) (i64.const 0)
       (f64.const 0) (i64.const 0) (f32.const 0) (i32.const 0)
       (i32.const 3)
@@ -190,11 +190,11 @@
   )
 
   (func (export "signature-explicit-duplicate")
-    (call_indirect $empty-sig-duplicate (i32.const 1))
+    (call_indirect (type $empty-sig-duplicate) (i32.const 1))
   )
 
   (func (export "signature-implicit-duplicate")
-    (call_indirect $complex-sig-duplicate
+    (call_indirect (type $complex-sig-duplicate)
       (f64.const 0) (i64.const 0) (f64.const 0) (i64.const 0)
       (f64.const 0) (i64.const 0) (f32.const 0) (i32.const 0)
       (i32.const 0)
